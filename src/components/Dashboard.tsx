@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import PredictionCard from './PredictionCard';
 import MarketStatus from './MarketStatus';
@@ -35,39 +36,55 @@ const Dashboard = () => {
     
     return () => clearInterval(interval);
   }, []);
+
+  // Update current time display
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const timeElement = document.getElementById('current-time');
+      if (timeElement) {
+        timeElement.textContent = now.toLocaleTimeString();
+      }
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
   
   return (
     <div className="flex flex-col h-full min-h-screen w-full bg-black text-white">
-      <div className="flex justify-between items-center p-4 border-b border-gray-800">
+      <div className="flex justify-between items-center p-4 border-b border-white">
         <h1 className="text-xl font-bold">Nifty Direction Predictor</h1>
         <div className="flex gap-4">
           <button 
             onClick={() => setCurrentPage('main')} 
-            className={`px-3 py-1 rounded ${currentPage === 'main' ? 'bg-gray-800' : 'hover:bg-gray-900'}`}
+            className={`px-3 py-1 rounded ${currentPage === 'main' ? 'bg-black border border-white' : 'hover:bg-gray-900'}`}
           >
             Main
           </button>
           <button 
             onClick={() => setCurrentPage('analysis')} 
-            className={`px-3 py-1 rounded ${currentPage === 'analysis' ? 'bg-gray-800' : 'hover:bg-gray-900'}`}
+            className={`px-3 py-1 rounded ${currentPage === 'analysis' ? 'bg-black border border-white' : 'hover:bg-gray-900'}`}
           >
             Analysis
           </button>
           <button 
             onClick={() => setCurrentPage('trades')} 
-            className={`px-3 py-1 rounded ${currentPage === 'trades' ? 'bg-gray-800' : 'hover:bg-gray-900'}`}
+            className={`px-3 py-1 rounded ${currentPage === 'trades' ? 'bg-black border border-white' : 'hover:bg-gray-900'}`}
           >
             Trades
           </button>
           <button 
             onClick={() => setCurrentPage('insights')} 
-            className={`px-3 py-1 rounded ${currentPage === 'insights' ? 'bg-gray-800' : 'hover:bg-gray-900'}`}
+            className={`px-3 py-1 rounded ${currentPage === 'insights' ? 'bg-black border border-white' : 'hover:bg-gray-900'}`}
           >
             Insights
           </button>
           <button 
             onClick={() => setIsDemoMode(!isDemoMode)} 
-            className={`px-3 py-1 rounded ${isDemoMode ? 'bg-green-700' : 'bg-gray-800'}`}
+            className={`px-3 py-1 rounded ${isDemoMode ? 'bg-nifty-green text-black' : 'bg-black border border-white'}`}
           >
             {isDemoMode ? 'Demo: ON' : 'Demo: OFF'}
           </button>
@@ -84,12 +101,12 @@ const Dashboard = () => {
             </div>
             <div className="lg:w-3/4 w-full">
               {!isMarketOpen && !isDemoMode ? (
-                <div className="bg-gray-900 rounded-lg p-8 text-center h-full flex flex-col items-center justify-center">
+                <div className="bg-black border border-white rounded-lg p-8 text-center h-full flex flex-col items-center justify-center">
                   <h3 className="text-xl font-bold mb-4">Market is Currently Closed</h3>
                   <p className="mb-6">Live prediction data will be available when the market opens.</p>
                   <button 
                     onClick={() => setIsDemoMode(true)} 
-                    className="px-4 py-2 bg-green-700 rounded hover:bg-green-600 transition-colors"
+                    className="px-4 py-2 bg-nifty-green text-black rounded hover:opacity-90 transition-colors"
                   >
                     View Demo Data
                   </button>
@@ -105,7 +122,7 @@ const Dashboard = () => {
           <div className="h-full p-4">
             <h2 className="text-2xl font-bold mb-6">Market Analysis</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-gray-900 p-4 rounded-lg">
+              <div className="bg-black border border-white p-4 rounded-lg">
                 <h3 className="text-xl font-bold mb-2">News Impact</h3>
                 <ul className="space-y-2">
                   {[
@@ -114,7 +131,7 @@ const Dashboard = () => {
                     { title: "Quarterly earnings beat", impact: "+3.5%", type: "positive" },
                     { title: "Global market rally", impact: "+1.8%", type: "positive" },
                   ].map((item, index) => (
-                    <li key={index} className="flex justify-between items-center border-b border-gray-800 pb-2">
+                    <li key={index} className="flex justify-between items-center border-b border-white pb-2">
                       <span>{item.title}</span>
                       <span className={item.type === "positive" ? "text-nifty-green" : "text-nifty-red"}>
                         {item.impact}
@@ -123,7 +140,7 @@ const Dashboard = () => {
                   ))}
                 </ul>
               </div>
-              <div className="bg-gray-900 p-4 rounded-lg">
+              <div className="bg-black border border-white p-4 rounded-lg">
                 <h3 className="text-xl font-bold mb-2">Technical Indicators</h3>
                 <ul className="space-y-2">
                   {[
@@ -132,10 +149,10 @@ const Dashboard = () => {
                     { name: "Moving Averages", signal: "Golden cross", impact: "+3.2%" },
                     { name: "Volume Profile", signal: "Above average", impact: "+1.1%" },
                   ].map((item, index) => (
-                    <li key={index} className="flex justify-between items-center border-b border-gray-800 pb-2">
+                    <li key={index} className="flex justify-between items-center border-b border-white pb-2">
                       <div>
                         <span className="font-medium">{item.name}</span>
-                        <span className="text-gray-400 ml-2 text-sm">{item.signal}</span>
+                        <span className="text-white/70 ml-2 text-sm">{item.signal}</span>
                       </div>
                       <span className={parseFloat(item.impact) > 0 ? "text-nifty-green" : "text-nifty-red"}>
                         {item.impact}
@@ -144,7 +161,7 @@ const Dashboard = () => {
                   ))}
                 </ul>
               </div>
-              <div className="bg-gray-900 p-4 rounded-lg">
+              <div className="bg-black border border-white p-4 rounded-lg">
                 <h3 className="text-xl font-bold mb-2">Algo Bot Activity</h3>
                 <ul className="space-y-2">
                   {[
@@ -153,15 +170,15 @@ const Dashboard = () => {
                     { pattern: "Short covering", activity: "High", impact: "+3.5%" },
                     { pattern: "Momentum follow", activity: "Low", impact: "+0.7%" },
                   ].map((item, index) => (
-                    <li key={index} className="flex justify-between items-center border-b border-gray-800 pb-2">
+                    <li key={index} className="flex justify-between items-center border-b border-white pb-2">
                       <div>
                         <span className="font-medium">{item.pattern}</span>
                         <span className={`ml-2 px-1 py-0.5 rounded text-xs 
                           ${item.activity === 'High' 
-                            ? 'bg-red-900 text-red-200' 
+                            ? 'bg-nifty-red/30 text-white' 
                             : item.activity === 'Medium' 
-                              ? 'bg-yellow-900 text-yellow-200' 
-                              : 'bg-blue-900 text-blue-200'
+                              ? 'bg-nifty-green/30 text-white' 
+                              : 'bg-white/20 text-white'
                           }`}>
                           {item.activity}
                         </span>
@@ -173,7 +190,7 @@ const Dashboard = () => {
                   ))}
                 </ul>
               </div>
-              <div className="bg-gray-900 p-4 rounded-lg">
+              <div className="bg-black border border-white p-4 rounded-lg">
                 <h3 className="text-xl font-bold mb-2">Institutional Activity</h3>
                 <ul className="space-y-2">
                   {[
@@ -182,10 +199,10 @@ const Dashboard = () => {
                     { entity: "Promoters", action: "Increased stake", impact: "+1.8%" },
                     { entity: "Retail", action: "Net buyers", impact: "+0.5%" },
                   ].map((item, index) => (
-                    <li key={index} className="flex justify-between items-center border-b border-gray-800 pb-2">
+                    <li key={index} className="flex justify-between items-center border-b border-white pb-2">
                       <div>
                         <span className="font-medium">{item.entity}</span>
-                        <span className="text-gray-400 ml-2 text-sm">{item.action}</span>
+                        <span className="text-white/70 ml-2 text-sm">{item.action}</span>
                       </div>
                       <span className={parseFloat(item.impact) > 0 ? "text-nifty-green" : "text-nifty-red"}>
                         {item.impact}
@@ -201,30 +218,30 @@ const Dashboard = () => {
         {currentPage === 'trades' && (
           <div className="h-full p-4">
             <h2 className="text-2xl font-bold mb-6">AI Trading Activity</h2>
-            <div className="bg-gray-900 rounded-lg p-4 mb-6">
+            <div className="bg-black border border-white rounded-lg p-4 mb-6">
               <h3 className="text-xl mb-2">Today's Performance</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-3 bg-gray-800 rounded-md">
-                  <div className="text-gray-400 text-sm">Initial Capital</div>
+                <div className="p-3 bg-black border border-white rounded-md">
+                  <div className="text-white/70 text-sm">Initial Capital</div>
                   <div className="text-2xl font-bold">₹10,000</div>
                 </div>
-                <div className="p-3 bg-gray-800 rounded-md">
-                  <div className="text-gray-400 text-sm">Current Value</div>
-                  <div className="text-2xl font-bold text-green-500">₹10,850</div>
+                <div className="p-3 bg-black border border-white rounded-md">
+                  <div className="text-white/70 text-sm">Current Value</div>
+                  <div className="text-2xl font-bold text-nifty-green">₹10,850</div>
                 </div>
-                <div className="p-3 bg-gray-800 rounded-md">
-                  <div className="text-gray-400 text-sm">Profit/Loss</div>
-                  <div className="text-2xl font-bold text-green-500">+₹850 (+8.5%)</div>
+                <div className="p-3 bg-black border border-white rounded-md">
+                  <div className="text-white/70 text-sm">Profit/Loss</div>
+                  <div className="text-2xl font-bold text-nifty-green">+₹850 (+8.5%)</div>
                 </div>
               </div>
             </div>
             
-            <div className="bg-gray-900 rounded-lg p-4">
+            <div className="bg-black border border-white rounded-lg p-4">
               <h3 className="text-xl mb-4">Today's Trades</h3>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-800">
+                    <tr className="border-b border-white">
                       <th className="text-left py-2 px-3">Time</th>
                       <th className="text-left py-2 px-3">Action</th>
                       <th className="text-left py-2 px-3">Contract</th>
@@ -242,15 +259,15 @@ const Dashboard = () => {
                       { time: "13:45", action: "BUY", contract: "NIFTY 22100 CE", price: "110.25", qty: 40, result: "+₹640" },
                       { time: "14:30", action: "SELL", contract: "NIFTY 22100 CE", price: "126.25", qty: 40, result: "+₹640", isSellTrade: true },
                     ].map((trade, index) => (
-                      <tr key={index} className={`border-b border-gray-800 ${trade.isSellTrade ? 'bg-gray-800 bg-opacity-40' : ''}`}>
+                      <tr key={index} className={`border-b border-white/30 ${trade.isSellTrade ? 'bg-white/5' : ''}`}>
                         <td className="py-3 px-3">{trade.time}</td>
-                        <td className={`py-3 px-3 ${trade.action === 'BUY' ? 'text-green-500' : 'text-red-500'}`}>
+                        <td className={`py-3 px-3 ${trade.action === 'BUY' ? 'text-nifty-green' : 'text-nifty-red'}`}>
                           {trade.action}
                         </td>
                         <td className="py-3 px-3">{trade.contract}</td>
                         <td className="py-3 px-3 text-right">{trade.price}</td>
                         <td className="py-3 px-3 text-right">{trade.qty}</td>
-                        <td className={`py-3 px-3 text-right ${trade.result.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
+                        <td className={`py-3 px-3 text-right ${trade.result.startsWith('+') ? 'text-nifty-green' : 'text-nifty-red'}`}>
                           {trade.result}
                         </td>
                       </tr>
@@ -266,59 +283,59 @@ const Dashboard = () => {
           <div className="h-full p-4">
             <h2 className="text-2xl font-bold mb-6">AI Insights</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-gray-900 p-4 rounded-lg">
+              <div className="bg-black border border-white p-4 rounded-lg">
                 <h3 className="text-xl font-bold mb-4">Prediction Accuracy</h3>
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <div className="text-3xl font-bold">78.5%</div>
-                    <div className="text-gray-400">30-day accuracy</div>
+                    <div className="text-white/70">30-day accuracy</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-green-500">+2.4%</div>
-                    <div className="text-gray-400">from previous week</div>
+                    <div className="text-2xl font-bold text-nifty-green">+2.4%</div>
+                    <div className="text-white/70">from previous week</div>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between mb-1">
                       <span>Today</span>
-                      <span className="text-green-500">85%</span>
+                      <span className="text-nifty-green">85%</span>
                     </div>
-                    <div className="w-full bg-gray-800 rounded-full h-2">
-                      <div className="bg-green-500 h-2 rounded-full" style={{ width: "85%" }}></div>
+                    <div className="w-full bg-white/20 rounded-full h-2">
+                      <div className="bg-nifty-green h-2 rounded-full" style={{ width: "85%" }}></div>
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
                       <span>This Week</span>
-                      <span className="text-green-500">79%</span>
+                      <span className="text-nifty-green">79%</span>
                     </div>
-                    <div className="w-full bg-gray-800 rounded-full h-2">
-                      <div className="bg-green-500 h-2 rounded-full" style={{ width: "79%" }}></div>
+                    <div className="w-full bg-white/20 rounded-full h-2">
+                      <div className="bg-nifty-green h-2 rounded-full" style={{ width: "79%" }}></div>
                     </div>
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
                       <span>This Month</span>
-                      <span className="text-green-500">74%</span>
+                      <span className="text-nifty-green">74%</span>
                     </div>
-                    <div className="w-full bg-gray-800 rounded-full h-2">
-                      <div className="bg-green-500 h-2 rounded-full" style={{ width: "74%" }}></div>
+                    <div className="w-full bg-white/20 rounded-full h-2">
+                      <div className="bg-nifty-green h-2 rounded-full" style={{ width: "74%" }}></div>
                     </div>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-gray-900 p-4 rounded-lg">
+              <div className="bg-black border border-white p-4 rounded-lg">
                 <h3 className="text-xl font-bold mb-4">Learning Progress</h3>
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <div className="text-3xl font-bold">+1,245</div>
-                    <div className="text-gray-400">Reward Points</div>
+                    <div className="text-white/70">Reward Points</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-green-500">+248</div>
-                    <div className="text-gray-400">Today's gain</div>
+                    <div className="text-2xl font-bold text-nifty-green">+248</div>
+                    <div className="text-white/70">Today's gain</div>
                   </div>
                 </div>
                 <div className="mb-4">
@@ -326,46 +343,46 @@ const Dashboard = () => {
                   <ul className="space-y-2">
                     <li className="flex justify-between">
                       <span>Pattern recognition</span>
-                      <span className="text-green-500">+320 points</span>
+                      <span className="text-nifty-green">+320 points</span>
                     </li>
                     <li className="flex justify-between">
                       <span>News sentiment analysis</span>
-                      <span className="text-green-500">+285 points</span>
+                      <span className="text-nifty-green">+285 points</span>
                     </li>
                     <li className="flex justify-between">
                       <span>Volume analysis</span>
-                      <span className="text-green-500">+210 points</span>
+                      <span className="text-nifty-green">+210 points</span>
                     </li>
                   </ul>
                 </div>
               </div>
 
-              <div className="bg-gray-900 p-4 rounded-lg lg:col-span-2">
+              <div className="bg-black border border-white p-4 rounded-lg lg:col-span-2">
                 <h3 className="text-xl font-bold mb-4">Market Pattern Recognition</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="bg-gray-800 p-3 rounded">
+                  <div className="bg-black border border-white p-3 rounded">
                     <div className="font-medium">Double Bottom</div>
                     <div className="flex justify-between mt-1">
-                      <span className="text-gray-400">Confidence</span>
-                      <span className="text-green-500">92%</span>
+                      <span className="text-white/70">Confidence</span>
+                      <span className="text-nifty-green">92%</span>
                     </div>
-                    <div className="text-gray-400 text-sm mt-2">Time frame: 30min chart</div>
+                    <div className="text-white/70 text-sm mt-2">Time frame: 30min chart</div>
                   </div>
-                  <div className="bg-gray-800 p-3 rounded">
+                  <div className="bg-black border border-white p-3 rounded">
                     <div className="font-medium">Bullish Engulfing</div>
                     <div className="flex justify-between mt-1">
-                      <span className="text-gray-400">Confidence</span>
-                      <span className="text-green-500">87%</span>
+                      <span className="text-white/70">Confidence</span>
+                      <span className="text-nifty-green">87%</span>
                     </div>
-                    <div className="text-gray-400 text-sm mt-2">Time frame: Daily chart</div>
+                    <div className="text-white/70 text-sm mt-2">Time frame: Daily chart</div>
                   </div>
-                  <div className="bg-gray-800 p-3 rounded">
+                  <div className="bg-black border border-white p-3 rounded">
                     <div className="font-medium">Resistance Break</div>
                     <div className="flex justify-between mt-1">
-                      <span className="text-gray-400">Confidence</span>
-                      <span className="text-green-500">78%</span>
+                      <span className="text-white/70">Confidence</span>
+                      <span className="text-nifty-green">78%</span>
                     </div>
-                    <div className="text-gray-400 text-sm mt-2">Time frame: 1hr chart</div>
+                    <div className="text-white/70 text-sm mt-2">Time frame: 1hr chart</div>
                   </div>
                 </div>
               </div>
@@ -374,7 +391,7 @@ const Dashboard = () => {
         )}
       </div>
 
-      <div className="p-4 border-t border-gray-800 text-sm text-gray-500">
+      <div className="p-4 border-t border-white text-sm text-white/60">
         <div className="flex justify-between items-center">
           <div>Nifty Direction Predictor | {isDemoMode ? 'Demo Mode' : 'Live Mode'}</div>
           <div>Last updated: <span id="current-time">--:--:--</span></div>

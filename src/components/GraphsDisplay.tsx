@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Area } from 'recharts';
 
 type TimeFrame = '10s' | '30s' | '1m' | '5m' | '1h' | '1d' | '1w' | '1M' | '1y';
 

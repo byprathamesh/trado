@@ -89,20 +89,20 @@ const TradingPerformance = () => {
   }, [performanceData.positions]);
   
   return (
-    <div className="bg-gray-900 rounded-lg p-4 mt-4">
+    <div className="bg-black border border-white rounded-lg p-4 mt-4">
       <h3 className="text-lg font-bold mb-3">Today's Trading</h3>
       
       <div className="grid grid-cols-2 gap-3 mb-3">
-        <div className="bg-gray-800 p-3 rounded">
-          <div className="text-sm text-gray-400">Current P&L</div>
-          <div className={`text-xl font-bold ${performanceData.todayProfit >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+        <div className="bg-black border border-white p-3 rounded">
+          <div className="text-sm text-white/70">Current P&L</div>
+          <div className={`text-xl font-bold ${performanceData.todayProfit >= 0 ? 'text-nifty-green' : 'text-nifty-red'}`}>
             ₹{performanceData.todayProfit.toFixed(0)}
           </div>
         </div>
         
-        <div className="bg-gray-800 p-3 rounded">
-          <div className="text-sm text-gray-400">Return</div>
-          <div className={`text-xl font-bold ${performanceData.todayPercentage >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+        <div className="bg-black border border-white p-3 rounded">
+          <div className="text-sm text-white/70">Return</div>
+          <div className={`text-xl font-bold ${performanceData.todayPercentage >= 0 ? 'text-nifty-green' : 'text-nifty-red'}`}>
             {performanceData.todayPercentage.toFixed(1)}%
           </div>
         </div>
@@ -110,17 +110,17 @@ const TradingPerformance = () => {
       
       {performanceData.positions.length > 0 && (
         <div className="mb-3">
-          <h4 className="text-sm font-semibold mb-2 text-gray-400">Active Positions</h4>
+          <h4 className="text-sm font-semibold mb-2 text-white/70">Active Positions</h4>
           <div className="space-y-2">
             {performanceData.positions.map(pos => (
-              <div key={pos.id} className="bg-gray-800 p-2 rounded flex justify-between items-center">
+              <div key={pos.id} className="bg-black border border-white p-2 rounded flex justify-between items-center">
                 <div className="flex flex-col">
-                  <span className="text-xs text-green-500">BUY</span>
+                  <span className="text-xs text-nifty-green">BUY</span>
                   <span>{pos.contract}</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs text-gray-400">@ ₹{pos.entry.toFixed(1)}</div>
-                  <div className="text-xs text-gray-400">{pos.time}</div>
+                  <div className="text-xs text-white/70">@ ₹{pos.entry.toFixed(1)}</div>
+                  <div className="text-xs text-white/70">{pos.time}</div>
                 </div>
               </div>
             ))}
@@ -128,13 +128,13 @@ const TradingPerformance = () => {
         </div>
       )}
       
-      <div className="flex justify-between text-sm mt-2 border-t border-gray-800 pt-2">
+      <div className="flex justify-between text-sm mt-2 border-t border-white/70 pt-2">
         <div>
-          <span className="text-gray-400">Initial: </span>
+          <span className="text-white/70">Initial: </span>
           <span>₹{performanceData.initialCapital.toFixed(0)}</span>
         </div>
         <div>
-          <span className="text-gray-400">Trades: </span>
+          <span className="text-white/70">Trades: </span>
           <span>{performanceData.tradesCount}</span>
         </div>
       </div>

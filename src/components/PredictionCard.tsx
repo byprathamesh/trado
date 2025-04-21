@@ -98,7 +98,7 @@ const PredictionCard = () => {
   }, []);
   
   return (
-    <div className="bg-gray-900 rounded-lg p-5 mb-4 animate-pulse-subtle">
+    <div className="bg-black border border-white rounded-lg p-5 mb-4">
       <h2 className="text-xl font-bold mb-4">Nifty Direction Predictor</h2>
       
       <div className="flex flex-col items-center justify-center py-6">
@@ -125,18 +125,18 @@ const PredictionCard = () => {
         {prediction.trend === 'strong' && (
           <div className={`text-lg font-semibold rounded-full px-4 py-1 mb-2 ${
             prediction.direction === 'UP' 
-              ? 'bg-green-950 text-nifty-green border border-nifty-green' 
-              : 'bg-red-950 text-nifty-red border border-nifty-red'
+              ? 'border border-nifty-green text-nifty-green' 
+              : 'border border-nifty-red text-nifty-red'
           }`}>
             <span>STRONG SIGNAL</span>
           </div>
         )}
       </div>
       
-      <div className="border-t border-gray-800 pt-4 mt-2">
+      <div className="border-t border-white pt-4 mt-2">
         <div className="flex justify-between items-center">
           <div className="text-sm">
-            <span className="text-gray-400">Last prediction: </span>
+            <span className="text-white/70">Last prediction: </span>
             {lastPrediction && (
               <span className={lastPrediction.wasCorrect ? 'text-nifty-green' : 'text-nifty-red'}>
                 {lastPrediction.direction} ({lastPrediction.wasCorrect ? 'Correct' : 'Incorrect'})
@@ -144,7 +144,7 @@ const PredictionCard = () => {
             )}
           </div>
           <div className="text-sm">
-            <span className="text-gray-400">Accuracy: </span>
+            <span className="text-white/70">Accuracy: </span>
             <span className="font-medium">{accuracy.toFixed(1)}%</span>
           </div>
         </div>
