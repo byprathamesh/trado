@@ -3,23 +3,23 @@ import React, { useState, useEffect } from 'react';
 
 const TradingPerformance = () => {
   const [performanceData, setPerformanceData] = useState({
-    initialCapital: 10000,
-    currentValue: 10000,
+    initialCapital: 100000, // More realistic initial capital
+    currentValue: 100000,
     todayProfit: 0,
     todayPercentage: 0,
     tradesCount: 0,
-    positions: [] as {id: number, entry: number, time: string, contract: string}[]
+    positions: [] as {id: number, entry: number, time: string, contract: string, quantity: number}[]
   });
   
   useEffect(() => {
-    // For demo purposes, simulate trading performance changes
+    // For realistic trading simulation
     const updatePerformance = () => {
       const now = new Date();
       const hours = now.getHours();
       const minutes = now.getMinutes();
-      const day = now.getDay(); // 0 is Sunday, 1 is Monday, etc.
+      const day = now.getDay();
       
-      // Check if market is open (Mon-Fri, 9:15 AM - 3:30 PM)
+      // Real market hours check
       const isWeekday = day >= 1 && day <= 5;
       const currentTimeInMinutes = hours * 60 + minutes;
       const marketOpenTimeInMinutes = 9 * 60 + 15;
@@ -30,57 +30,62 @@ const TradingPerformance = () => {
         currentTimeInMinutes < marketCloseTimeInMinutes;
       
       if (!marketIsOpen) {
-        // If market is closed, don't update
         return;
       }
       
-      const randomAction = Math.random();
+      // Trade execution logic
+      const shouldTrade = Math.random() > 0.97; // Realistic trading frequency
       
-      // BUY trade (if we have less than 3 active positions)
-      if (randomAction > 0.98 && performanceData.positions.length < 3) {
-        // Create a new position (always BUY trades)
-        const newPosition = {
-          id: Date.now(),
-          entry: Math.random() * 100 + 50,
-          time: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`,
-          contract: `NIFTY ${Math.floor(Math.random() * 1000) + 21000} CE`
-        };
-        
-        setPerformanceData(prev => ({
-          ...prev,
-          positions: [...prev.positions, newPosition],
-          tradesCount: prev.tradesCount + 1
-        }));
-      }
-      // SELL an existing position
-      else if (randomAction < 0.02 && performanceData.positions.length > 0) {
-        // Sell a random position
-        const positionIndex = Math.floor(Math.random() * performanceData.positions.length);
-        const position = performanceData.positions[positionIndex];
-        
-        // Calculate profit/loss (60% chance of profit)
-        const isProfit = Math.random() > 0.4;
-        const tradeResult = isProfit ? 
-          Math.random() * 200 + 50 : // Winning trade
-          -Math.random() * 150 - 50; // Losing trade
-        
-        setPerformanceData(prev => {
-          const newPositions = [...prev.positions];
-          newPositions.splice(positionIndex, 1);
+      if (shouldTrade) {
+        if (performanceData.positions.length < 3) { // Maximum 3 concurrent positions
+          // Calculate realistic contract details
+          const basePrice = 21000 + Math.floor(Math.random() * 2000);
+          const isCallOption = Math.random() > 0.3; // 70% calls in bullish market
+          const strikePrice = basePrice + (isCallOption ? 200 : -200);
+          const quantity = Math.floor(Math.random() * 3 + 1) * 25; // Realistic lot sizes
           
-          const newValue = prev.currentValue + tradeResult;
-          const newProfit = newValue - prev.initialCapital;
-          const newPercentage = (newProfit / prev.initialCapital) * 100;
-          
-          return {
-            ...prev,
-            positions: newPositions,
-            currentValue: newValue,
-            todayProfit: newProfit,
-            todayPercentage: newPercentage,
-            tradesCount: prev.tradesCount + 1
+          // Create new position with realistic values
+          const newPosition = {
+            id: Date.now(),
+            entry: Math.floor(Math.random() * 150 + 50), // Realistic premium
+            time: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`,
+            contract: `NIFTY ${strikePrice} ${isCallOption ? 'CE' : 'PE'}`,
+            quantity
           };
-        });
+          
+          setPerformanceData(prev => ({
+            ...prev,
+            positions: [...prev.positions, newPosition],
+            tradesCount: prev.tradesCount + 1
+          }));
+        }
+        // Position exit logic
+        else if (performanceData.positions.length > 0 && Math.random() > 0.5) {
+          const positionIndex = Math.floor(Math.random() * performanceData.positions.length);
+          const position = performanceData.positions[positionIndex];
+          
+          // Calculate realistic P&L
+          const exitPrice = position.entry * (1 + (Math.random() > 0.6 ? 1 : -0.5) * Math.random());
+          const tradeResult = (exitPrice - position.entry) * position.quantity;
+          
+          setPerformanceData(prev => {
+            const newPositions = [...prev.positions];
+            newPositions.splice(positionIndex, 1);
+            
+            const newValue = prev.currentValue + tradeResult;
+            const newProfit = newValue - prev.initialCapital;
+            const newPercentage = (newProfit / prev.initialCapital) * 100;
+            
+            return {
+              ...prev,
+              positions: newPositions,
+              currentValue: newValue,
+              todayProfit: newProfit,
+              todayPercentage: newPercentage,
+              tradesCount: prev.tradesCount + 1
+            };
+          });
+        }
       }
     };
     
@@ -95,15 +100,15 @@ const TradingPerformance = () => {
       <div className="grid grid-cols-2 gap-3 mb-3">
         <div className="bg-black border border-white p-3 rounded">
           <div className="text-sm text-white/70">Current P&L</div>
-          <div className={`text-xl font-bold ${performanceData.todayProfit >= 0 ? 'text-nifty-green' : 'text-nifty-red'}`}>
+          <div className={`text-xl font-bold ${performanceData.todayProfit >= 0 ? 'text-[#00FF00]' : 'text-[#FF4D4D]'}`}>
             ₹{performanceData.todayProfit.toFixed(0)}
           </div>
         </div>
         
         <div className="bg-black border border-white p-3 rounded">
           <div className="text-sm text-white/70">Return</div>
-          <div className={`text-xl font-bold ${performanceData.todayPercentage >= 0 ? 'text-nifty-green' : 'text-nifty-red'}`}>
-            {performanceData.todayPercentage.toFixed(1)}%
+          <div className={`text-xl font-bold ${performanceData.todayPercentage >= 0 ? 'text-[#00FF00]' : 'text-[#FF4D4D]'}`}>
+            {performanceData.todayPercentage.toFixed(2)}%
           </div>
         </div>
       </div>
@@ -115,12 +120,12 @@ const TradingPerformance = () => {
             {performanceData.positions.map(pos => (
               <div key={pos.id} className="bg-black border border-white p-2 rounded flex justify-between items-center">
                 <div className="flex flex-col">
-                  <span className="text-xs text-nifty-green">BUY</span>
+                  <span className="text-xs text-[#00FF00]">BUY</span>
                   <span>{pos.contract}</span>
                 </div>
                 <div className="text-right">
                   <div className="text-xs text-white/70">@ ₹{pos.entry.toFixed(1)}</div>
-                  <div className="text-xs text-white/70">{pos.time}</div>
+                  <div className="text-xs text-white/70">{pos.time} • {pos.quantity} qty</div>
                 </div>
               </div>
             ))}
