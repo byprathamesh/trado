@@ -118,7 +118,7 @@ const GraphsDisplay: React.FC<GraphsDisplayProps> = ({ isDemo, isMarketOpen }) =
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [timeFrame, isDemo, isMarketOpen]);
+  }, [timeFrame, isDemo, isMarketOpen, niftyData.length, predictionData.length]);
   
   return (
     <div className="h-full">
@@ -160,11 +160,11 @@ const GraphsDisplay: React.FC<GraphsDisplayProps> = ({ isDemo, isMarketOpen }) =
               <ReferenceLine y={50} stroke="#666" strokeDasharray="3 3" />
               <defs>
                 <linearGradient id="gradientUp" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="rgba(0,255,0,0.8)" />
+                  <stop offset="0%" stopColor="#00FF00" />
                   <stop offset="100%" stopColor="rgba(0,255,0,0)" />
                 </linearGradient>
                 <linearGradient id="gradientDown" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%" stopColor="rgba(255,77,77,0.8)" />
+                  <stop offset="0%" stopColor="#FF4D4D" />
                   <stop offset="100%" stopColor="rgba(255,77,77,0)" />
                 </linearGradient>
               </defs>

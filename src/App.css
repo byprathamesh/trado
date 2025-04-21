@@ -1,8 +1,38 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
+}
+
+/* Use only black, white, red, and green colors */
+:root {
+  --nifty-green: #00FF00;
+  --nifty-red: #FF4D4D;
+  --nifty-white: #FFFFFF;
+  --nifty-black: #000000;
+}
+
+body {
+  background-color: var(--nifty-black);
+  color: var(--nifty-white);
+}
+
+.text-nifty-green {
+  color: var(--nifty-green);
+}
+
+.text-nifty-red {
+  color: var(--nifty-red);
+}
+
+.bg-nifty-green {
+  background-color: var(--nifty-green);
+}
+
+.bg-nifty-red {
+  background-color: var(--nifty-red);
 }
 
 .logo {
