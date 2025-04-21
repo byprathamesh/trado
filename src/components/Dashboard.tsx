@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import PredictionCard from './PredictionCard';
 import MarketStatus from './MarketStatus';
@@ -7,6 +6,39 @@ import GraphsDisplay from './GraphsDisplay';
 
 const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState<'main' | 'analysis' | 'trades' | 'insights'>('main');
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
+  const [isMarketOpen, setIsMarketOpen] = useState<boolean>(false);
+  
+  useEffect(() => {
+    const checkMarketStatus = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const day = now.getDay();
+      
+      const isWeekday = day >= 1 && day <= 5;
+      
+      const currentTimeInMinutes = hours * 60 + minutes;
+      const marketOpenTimeInMinutes = 9 * 60 + 15;
+      const marketCloseTimeInMinutes = 15 * 60 + 30;
+      
+      const marketOpen = isWeekday && 
+        currentTimeInMinutes >= marketOpenTimeInMinutes && 
+        currentTimeInMinutes < marketCloseTimeInMinutes;
+      
+      setIsMarketOpen(marketOpen);
+      
+      if (!marketOpen && !isDemoMode) {
+        setIsDemoMode(true);
+      }
+    };
+    
+    checkMarketStatus();
+    
+    const interval = setInterval(checkMarketStatus, 60000);
+    
+    return () => clearInterval(interval);
+  }, [isDemoMode]);
   
   return (
     <div className="flex flex-col h-full min-h-screen w-full bg-black text-white">
@@ -37,6 +69,14 @@ const Dashboard = () => {
           >
             Insights
           </button>
+          {!isMarketOpen && (
+            <button 
+              onClick={() => setIsDemoMode(!isDemoMode)} 
+              className={`px-3 py-1 rounded ${isDemoMode ? 'bg-green-700' : 'bg-gray-800'}`}
+            >
+              {isDemoMode ? 'Demo: ON' : 'Demo: OFF'}
+            </button>
+          )}
         </div>
         <MarketStatus />
       </div>
@@ -49,7 +89,20 @@ const Dashboard = () => {
               <TradingPerformance />
             </div>
             <div className="lg:w-3/4 w-full">
-              <GraphsDisplay />
+              {!isMarketOpen && !isDemoMode ? (
+                <div className="bg-gray-900 rounded-lg p-8 text-center h-full flex flex-col items-center justify-center">
+                  <h3 className="text-xl font-bold mb-4">Market is Currently Closed</h3>
+                  <p className="mb-6">Live prediction data will be available when the market opens.</p>
+                  <button 
+                    onClick={() => setIsDemoMode(true)} 
+                    className="px-4 py-2 bg-green-700 rounded hover:bg-green-600 transition-colors"
+                  >
+                    View Demo Data
+                  </button>
+                </div>
+              ) : (
+                <GraphsDisplay isDemo={isDemoMode} isMarketOpen={isMarketOpen} />
+              )}
             </div>
           </div>
         )}
@@ -329,7 +382,7 @@ const Dashboard = () => {
 
       <div className="p-4 border-t border-gray-800 text-sm text-gray-500">
         <div className="flex justify-between items-center">
-          <div>Nifty Direction Predictor | Demo Version</div>
+          <div>Nifty Direction Predictor | {isDemoMode ? 'Demo Mode' : 'Live Mode'}</div>
           <div>Last updated: <span id="current-time">--:--:--</span></div>
         </div>
       </div>

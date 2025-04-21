@@ -3,7 +3,12 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 type TimeFrame = '10s' | '30s' | '1m' | '5m' | '1h' | '1d' | '1w' | '1M' | '1y';
 
-const GraphsDisplay = () => {
+interface GraphsDisplayProps {
+  isDemo: boolean;
+  isMarketOpen: boolean;
+}
+
+const GraphsDisplay: React.FC<GraphsDisplayProps> = ({ isDemo, isMarketOpen }) => {
   const [timeFrame, setTimeFrame] = useState<TimeFrame>('1m');
   const [niftyData, setNiftyData] = useState<any[]>([]);
   const [predictionData, setPredictionData] = useState<any[]>([]);
@@ -71,49 +76,58 @@ const GraphsDisplay = () => {
     setNiftyData(initialData);
     setPredictionData(initialData);
     
-    // Update data every second
-    const interval = setInterval(() => {
-      const now = new Date();
-      const time = now.toLocaleTimeString();
-      
-      // Generate new data point
-      const lastNiftyValue = niftyData.length > 0 ? niftyData[niftyData.length - 1].nifty : 22000;
-      const newNiftyValue = lastNiftyValue + (Math.random() - 0.5) * 5;
-      
-      const lastPredictionValue = predictionData.length > 0 ? predictionData[predictionData.length - 1].prediction : 50;
-      const newPredictionValue = Math.max(0, Math.min(100, lastPredictionValue + (Math.random() - 0.5) * 3));
-      
-      // Update data arrays
-      setNiftyData(prevData => {
-        const newData = [...prevData, { time, nifty: newNiftyValue }];
-        // Keep only the last N points based on timeframe
-        const maxPoints = timeFrame === '10s' ? 10 : 
-                         timeFrame === '30s' ? 30 : 
-                         timeFrame === '1m' ? 60 : 
-                         timeFrame === '5m' ? 60 : 
-                         timeFrame === '1h' ? 60 : 60;
-        return newData.slice(-maxPoints);
-      });
-      
-      setPredictionData(prevData => {
-        const newData = [...prevData, { time, prediction: newPredictionValue }];
-        const maxPoints = timeFrame === '10s' ? 10 : 
-                         timeFrame === '30s' ? 30 : 
-                         timeFrame === '1m' ? 60 : 
-                         timeFrame === '5m' ? 60 : 
-                         timeFrame === '1h' ? 60 : 60;
-        return newData.slice(-maxPoints);
-      });
-    }, 1000);
+    // Update data every second, but only if in demo mode or market is open
+    let interval: number | null = null;
     
-    return () => clearInterval(interval);
-  }, [timeFrame]);
+    if (isDemo || isMarketOpen) {
+      interval = window.setInterval(() => {
+        const now = new Date();
+        const time = now.toLocaleTimeString();
+        
+        // Generate new data point
+        const lastNiftyValue = niftyData.length > 0 ? niftyData[niftyData.length - 1].nifty : 22000;
+        const newNiftyValue = lastNiftyValue + (Math.random() - 0.5) * 5;
+        
+        const lastPredictionValue = predictionData.length > 0 ? predictionData[predictionData.length - 1].prediction : 50;
+        const newPredictionValue = Math.max(0, Math.min(100, lastPredictionValue + (Math.random() - 0.5) * 3));
+        
+        // Update data arrays
+        setNiftyData(prevData => {
+          const newData = [...prevData, { time, nifty: newNiftyValue }];
+          // Keep only the last N points based on timeframe
+          const maxPoints = timeFrame === '10s' ? 10 : 
+                          timeFrame === '30s' ? 30 : 
+                          timeFrame === '1m' ? 60 : 
+                          timeFrame === '5m' ? 60 : 
+                          timeFrame === '1h' ? 60 : 60;
+          return newData.slice(-maxPoints);
+        });
+        
+        setPredictionData(prevData => {
+          const newData = [...prevData, { time, prediction: newPredictionValue }];
+          const maxPoints = timeFrame === '10s' ? 10 : 
+                          timeFrame === '30s' ? 30 : 
+                          timeFrame === '1m' ? 60 : 
+                          timeFrame === '5m' ? 60 : 
+                          timeFrame === '1h' ? 60 : 60;
+          return newData.slice(-maxPoints);
+        });
+      }, 1000);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [timeFrame, isDemo, isMarketOpen]);
   
   return (
     <div className="h-full">
       <div className="bg-gray-900 rounded-lg p-4 mb-4">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-bold">Nifty & Prediction Charts</h3>
+          <h3 className="text-lg font-bold">
+            Nifty & Prediction Charts {!isMarketOpen && isDemo ? '(Demo Mode)' : ''}
+            {!isMarketOpen && !isDemo && ' - Market Closed'}
+          </h3>
           <div className="flex gap-2">
             {(['10s', '30s', '1m', '5m', '1h', '1d', '1w', '1M', '1y'] as TimeFrame[]).map((tf) => (
               <button
@@ -172,7 +186,7 @@ const GraphsDisplay = () => {
                 <Line 
                   type="monotone" 
                   dataKey="prediction" 
-                  stroke="none" 
+                  stroke="#00FF00" 
                   fill="url(#gradientUp)"
                   fillOpacity={0.5}
                   isAnimationActive={false}
@@ -189,7 +203,7 @@ const GraphsDisplay = () => {
                 <Line 
                   type="monotone" 
                   dataKey="prediction" 
-                  stroke="none" 
+                  stroke="#FF4D4D" 
                   fill="url(#gradientDown)"
                   fillOpacity={0.5}
                   isAnimationActive={false}
