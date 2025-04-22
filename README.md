@@ -1,7 +1,5 @@
 # Trend Whisperer
 
-Local Development Server: http://localhost:8080
-
 ## Intellectual Property Notice
 
 © 2024 Prathamesh. All Rights Reserved.
