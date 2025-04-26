@@ -15,8 +15,12 @@
 }
 
 body {
-  background-color: var(--nifty-black);
-  color: var(--nifty-white);
+  /* Modern soft gradient background */
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: #222831;
+  min-height: 100vh;
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+  transition: background 0.3s ease;
 }
 
 .text-nifty-green {
