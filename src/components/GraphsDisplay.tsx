@@ -158,64 +158,44 @@ const GraphsDisplay: React.FC<GraphsDisplayProps> = ({ isDemo, isMarketOpen }) =
               data={predictionData}
               margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
             >
-              <CartesianGrid stroke="#444" strokeDasharray="5 5" vertical={false} />
-              <XAxis dataKey="time" tick={{ fontSize: 10 }} stroke="#666" />
-              <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} stroke="#666" />
+              <CartesianGrid stroke="#fff" strokeDasharray="5 5" vertical={false} />
+              <XAxis dataKey="time" tick={{ fontSize: 10, fill: '#fff' }} stroke="#fff" />
+              <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: '#fff' }} stroke="#fff" />
               <Tooltip 
-                contentStyle={{ backgroundColor: '#222', borderColor: '#444' }}
+                contentStyle={{ backgroundColor: '#000', borderColor: '#fff', color: '#fff' }}
+                itemStyle={{ color: '#fff' }}
+                labelStyle={{ color: '#fff' }}
                 formatter={(value: any) => [`${value}%`, 'Probability']}
               />
-              <ReferenceLine y={50} stroke="#666" strokeDasharray="3 3" />
-              <defs>
-                <linearGradient id="gradientUp" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#00FF00" />
-                  <stop offset="100%" stopColor="rgba(0,255,0,0)" />
-                </linearGradient>
-                <linearGradient id="gradientDown" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%" stopColor="#FF4D4D" />
-                  <stop offset="100%" stopColor="rgba(255,77,77,0)" />
-                </linearGradient>
-              </defs>
+              <ReferenceLine y={50} stroke="#fff" strokeDasharray="3 3" />
               <Line 
                 type="monotone" 
                 dataKey="prediction" 
-                stroke="#FFF" 
+                stroke="#fff" 
                 dot={false}
                 strokeWidth={2}
                 isAnimationActive={false}
               />
               {/* Green area above 50 */}
               <ReferenceLine y={50} ifOverflow="extendDomain">
-                <defs>
-                  <clipPath id="clipAbove">
-                    <rect x="0" y="0" width="100%" height="50%" />
-                  </clipPath>
-                </defs>
-                <Line 
+                <Area 
                   type="monotone" 
                   dataKey="prediction" 
                   stroke="#00FF00" 
-                  fill="url(#gradientUp)"
+                  fill="#00FF00"
                   fillOpacity={0.5}
                   isAnimationActive={false}
-                  clipPath="url(#clipAbove)"
                 />
               </ReferenceLine>
               {/* Red area below 50 */}
               <ReferenceLine y={50} ifOverflow="extendDomain">
-                <defs>
-                  <clipPath id="clipBelow">
-                    <rect x="0" y="50%" width="100%" height="50%" />
-                  </clipPath>
-                </defs>
-                <Line 
+                <Area 
                   type="monotone" 
                   dataKey="prediction" 
                   stroke="#FF4D4D" 
-                  fill="url(#gradientDown)"
+                  fill="#FF4D4D"
                   fillOpacity={0.5}
                   isAnimationActive={false}
-                  clipPath="url(#clipBelow)"
                 />
               </ReferenceLine>
             </LineChart>
@@ -229,17 +209,19 @@ const GraphsDisplay: React.FC<GraphsDisplayProps> = ({ isDemo, isMarketOpen }) =
               data={niftyData}
               margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
             >
-              <CartesianGrid stroke="#444" strokeDasharray="5 5" vertical={false} />
-              <XAxis dataKey="time" tick={{ fontSize: 10 }} stroke="#666" />
-              <YAxis domain={['auto', 'auto']} tick={{ fontSize: 10 }} stroke="#666" />
+              <CartesianGrid stroke="#fff" strokeDasharray="5 5" vertical={false} />
+              <XAxis dataKey="time" tick={{ fontSize: 10, fill: '#fff' }} stroke="#fff" />
+              <YAxis domain={['auto', 'auto']} tick={{ fontSize: 10, fill: '#fff' }} stroke="#fff" />
               <Tooltip 
-                contentStyle={{ backgroundColor: '#222', borderColor: '#444' }}
+                contentStyle={{ backgroundColor: '#000', borderColor: '#fff', color: '#fff' }}
+                itemStyle={{ color: '#fff' }}
+                labelStyle={{ color: '#fff' }}
                 formatter={(value: any) => [`${value.toFixed(2)}`, 'Nifty']}
               />
               <Line 
                 type="monotone" 
                 dataKey="nifty" 
-                stroke="#FFF" 
+                stroke="#fff" 
                 dot={false}
                 strokeWidth={2}
                 isAnimationActive={false}
