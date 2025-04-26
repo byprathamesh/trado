@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Area } from 'recharts';
+import styles from './GraphsDisplay.module.css';
 
 type TimeFrame = '10s' | '30s' | '1m' | '5m' | '1h' | '1d' | '1w' | '1M' | '1y';
 
@@ -123,20 +124,26 @@ const GraphsDisplay: React.FC<GraphsDisplayProps> = ({ isDemo, isMarketOpen }) =
   
   return (
     <div className="h-full">
-      <div className="bg-gray-900 rounded-lg p-4 mb-4">
+      <div className={styles.chartCard}>
+        {/* LIVE DEMO badge */}
+        <div className={styles.liveBadge}>
+          <span className={styles.pulseDot}></span>
+          LIVE DEMO
+        </div>
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-bold">
+          <h3 className="text-xl font-extrabold text-[#3a86ff] drop-shadow-sm">
             Nifty & Prediction Charts {!isMarketOpen && isDemo ? '(Demo Mode)' : ''}
             {!isMarketOpen && !isDemo && ' - Market Closed'}
           </h3>
-          <div className="flex gap-2">
+          <div>
             {(['10s', '30s', '1m', '5m', '1h', '1d', '1w', '1M', '1y'] as TimeFrame[]).map((tf) => (
               <button
                 key={tf}
                 onClick={() => setTimeFrame(tf)}
-                className={`px-2 py-1 text-xs rounded ${
-                  timeFrame === tf ? 'bg-gray-700' : 'bg-gray-800 hover:bg-gray-700'
-                }`}
+                className={[
+                  styles.timeFrameBtn,
+                  timeFrame === tf ? styles.selected : ''
+                ].join(' ')}
               >
                 {tf}
               </button>
