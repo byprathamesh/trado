@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import PredictionCard from './PredictionCard';
 import MarketStatus from './MarketStatus';
@@ -37,22 +36,6 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Update current time display
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const timeElement = document.getElementById('current-time');
-      if (timeElement) {
-        timeElement.textContent = now.toLocaleTimeString();
-      }
-    };
-    
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    
-    return () => clearInterval(interval);
-  }, []);
-  
   return (
     <div className="flex flex-col h-full min-h-screen w-full bg-black text-white">
       <div className="flex justify-between items-center p-4 border-b border-white">

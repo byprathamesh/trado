@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 
 const MarketStatus = () => {
   const [isMarketOpen, setIsMarketOpen] = useState<boolean>(false);
   const [nextMarketTime, setNextMarketTime] = useState<string>("");
   const [countdown, setCountdown] = useState<string>("");
+  const [currentTime, setCurrentTime] = useState<string>(new Date().toLocaleTimeString());
   
   const checkMarketStatus = () => {
     // Get current date and time in IST
@@ -64,33 +64,32 @@ const MarketStatus = () => {
   useEffect(() => {
     // Initial check
     checkMarketStatus();
+    setCurrentTime(new Date().toLocaleTimeString());
     
     // Update every second
     const timer = setInterval(() => {
       checkMarketStatus();
-      
-      // Also update the current time display
-      const now = new Date();
-      const timeString = now.toLocaleTimeString();
-      const timeElement = document.getElementById('current-time');
-      if (timeElement) {
-        timeElement.textContent = timeString;
-      }
+      setCurrentTime(new Date().toLocaleTimeString());
     }, 1000);
     
     return () => clearInterval(timer);
   }, []);
   
   return (
-    <div className="flex items-center space-x-2">
-      <div className={`h-2.5 w-2.5 rounded-full ${isMarketOpen ? 'bg-nifty-green' : 'bg-nifty-red'} animate-pulse-subtle`}></div>
-      <div className="text-sm">
-        <span className="font-medium">{isMarketOpen ? 'Market Open' : 'Market Closed'}</span>
-        {!isMarketOpen && countdown && (
-          <div className="text-xs text-gray-400">
-            Opens in: {countdown}
-          </div>
-        )}
+    <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2">
+        <div className={`h-2.5 w-2.5 rounded-full ${isMarketOpen ? 'bg-nifty-green' : 'bg-nifty-red'} animate-pulse-subtle`}></div>
+        <div className="text-sm">
+          <span className="font-medium">{isMarketOpen ? 'Market Open' : 'Market Closed'}</span>
+          {!isMarketOpen && countdown && (
+            <div className="text-xs text-gray-400">
+              Opens in: {countdown}
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="text-sm font-medium text-white">
+        {currentTime}
       </div>
     </div>
   );
